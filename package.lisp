@@ -1,4 +1,4 @@
-(defpackage :directed-graph
-  (:use :cl :directed-graph.quickutils)
+(defpackage :digraph
+  (:use :cl :digraph.quickutils)
   (:export))
 

@@ -20,4 +20,4 @@
                :with-gensyms
 
                )
-  :package "DIRECTED-GRAPH.QUICKUTILS")
+  :package "DIGRAPH.QUICKUTILS")

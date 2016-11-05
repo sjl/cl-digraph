@@ -1,4 +1,4 @@
-(in-package :directed-graph)
+(in-package :digraph)
 
 
 ;;;; Data ---------------------------------------------------------------------

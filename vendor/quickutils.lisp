@@ -2,15 +2,15 @@
 ;;;; See http://quickutil.org for details.
 
 ;;;; To regenerate:
-;;;; (qtlc:save-utils-as "quickutils.lisp" :utilities '(:COMPOSE :CURRY :DOHASH :ENSURE-BOOLEAN :ENSURE-GETHASH :ENSURE-LIST :HASH-TABLE-KEYS :MAPHASH-KEYS :MKSTR :ONCE-ONLY :RCURRY :REMOVEF :SYMB :WITH-GENSYMS) :ensure-package T :package "DIRECTED-GRAPH.QUICKUTILS")
+;;;; (qtlc:save-utils-as "quickutils.lisp" :utilities '(:COMPOSE :CURRY :DOHASH :ENSURE-BOOLEAN :ENSURE-GETHASH :ENSURE-LIST :HASH-TABLE-KEYS :MAPHASH-KEYS :MKSTR :ONCE-ONLY :RCURRY :REMOVEF :SYMB :WITH-GENSYMS) :ensure-package T :package "DIGRAPH.QUICKUTILS")
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (unless (find-package "DIRECTED-GRAPH.QUICKUTILS")
-    (defpackage "DIRECTED-GRAPH.QUICKUTILS"
+  (unless (find-package "DIGRAPH.QUICKUTILS")
+    (defpackage "DIGRAPH.QUICKUTILS"
       (:documentation "Package that contains Quickutil utility functions.")
       (:use #:cl))))
 
-(in-package "DIRECTED-GRAPH.QUICKUTILS")
+(in-package "DIGRAPH.QUICKUTILS")
 
 (when (boundp '*utilities*)
   (setf *utilities* (union *utilities* '(:MAKE-GENSYM-LIST :ENSURE-FUNCTION

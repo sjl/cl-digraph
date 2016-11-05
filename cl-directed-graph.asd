@@ -1,6 +1,6 @@
-(asdf:defsystem :cl-directed-graph
-  :name "directed-graph"
-  :description "Simple directed graphs in Common Lisp."
+(asdf:defsystem :cl-digraph
+  :name "digraph"
+  :description "Simple directed graphs for Common Lisp."
 
   :author "Steve Losh <steve@stevelosh.com>"
 
