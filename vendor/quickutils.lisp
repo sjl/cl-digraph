@@ -2,7 +2,7 @@
 ;;;; See http://quickutil.org for details.
 
 ;;;; To regenerate:
-;;;; (qtlc:save-utils-as "quickutils.lisp" :utilities '(:COMPOSE :CURRY :DOHASH :ENSURE-BOOLEAN :ENSURE-GETHASH :ENSURE-LIST :HASH-TABLE-KEYS :MAPHASH-KEYS :MKSTR :ONCE-ONLY :RCURRY :REMOVEF :SYMB :WITH-GENSYMS) :ensure-package T :package "DIGRAPH.QUICKUTILS")
+;;;; (qtlc:save-utils-as "quickutils.lisp" :utilities '(:APPENDF :COMPOSE :CURRY :DOHASH :ENSURE-BOOLEAN :ENSURE-GETHASH :ENSURE-LIST :HASH-TABLE-KEYS :MAPHASH-KEYS :MKSTR :ONCE-ONLY :RCURRY :REMOVEF :SYMB :WITH-GENSYMS) :ensure-package T :package "DIGRAPH.QUICKUTILS")
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (unless (find-package "DIGRAPH.QUICKUTILS")
@@ -13,13 +13,18 @@
 (in-package "DIGRAPH.QUICKUTILS")
 
 (when (boundp '*utilities*)
-  (setf *utilities* (union *utilities* '(:MAKE-GENSYM-LIST :ENSURE-FUNCTION
-                                         :COMPOSE :CURRY :DOHASH
-                                         :ENSURE-BOOLEAN :ENSURE-GETHASH
-                                         :ENSURE-LIST :MAPHASH-KEYS
-                                         :HASH-TABLE-KEYS :MKSTR :ONCE-ONLY
-                                         :RCURRY :REMOVEF :SYMB
+  (setf *utilities* (union *utilities* '(:APPENDF :MAKE-GENSYM-LIST
+                                         :ENSURE-FUNCTION :COMPOSE :CURRY
+                                         :DOHASH :ENSURE-BOOLEAN
+                                         :ENSURE-GETHASH :ENSURE-LIST
+                                         :MAPHASH-KEYS :HASH-TABLE-KEYS :MKSTR
+                                         :ONCE-ONLY :RCURRY :REMOVEF :SYMB
                                          :STRING-DESIGNATOR :WITH-GENSYMS))))
+
+  (define-modify-macro appendf (&rest lists) append
+    "Modify-macro for `append`. Appends `lists` to the place designated by the first
+argument.")
+  
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defun make-gensym-list (length &optional (x "G"))
     "Returns a list of `length` gensyms, each generated as if with a call to `make-gensym`,
@@ -264,8 +269,8 @@ unique symbol the named variable will be bound to."
     `(with-gensyms ,names ,@forms))
   
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (export '(compose curry dohash ensure-boolean ensure-gethash ensure-list
-            hash-table-keys maphash-keys mkstr once-only rcurry removef symb
-            with-gensyms with-unique-names)))
+  (export '(appendf compose curry dohash ensure-boolean ensure-gethash
+            ensure-list hash-table-keys maphash-keys mkstr once-only rcurry
+            removef symb with-gensyms with-unique-names)))
 
 ;;;; END OF quickutils.lisp ;;;;

@@ -1,4 +1,4 @@
-(defpackage :digraph-test
+(defpackage :digraph.test
   (:use
     :cl
     :1am

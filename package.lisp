@@ -32,6 +32,9 @@
     :map-vertices
     :map-edges
 
-    :copy-digraph
-    ))
+    :map-depth-first
+    :map-breadth-first
+    :mapc-depth-first
+    :mapc-breadth-first
 
+    :copy-digraph))

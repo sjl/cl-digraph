@@ -4,6 +4,7 @@
   "quickutils.lisp"
   :utilities '(
 
+               :appendf
                :compose
                :curry
                :dohash

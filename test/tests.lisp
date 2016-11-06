@@ -1,4 +1,4 @@
-(in-package :digraph-test)
+(in-package :digraph.test)
 
 
 ;;;; Utils --------------------------------------------------------------------

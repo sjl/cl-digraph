@@ -3,7 +3,7 @@
 
 
 ;;;; Utils --------------------------------------------------------------------
-(defun make-hash-table-portably (&key size test hash-function)
+(defun make-hash-table-portably (&key (size 0) test hash-function)
   ;; Only try to pass :hash-function if we were given it, so we don't explode in
   ;; implementations that don't support it.
   ;;
@@ -55,10 +55,10 @@
 
 
 (defun predecessors (digraph object)
-  (pred digraph object))
+  (copy-list (pred digraph object)))
 
 (defun successors (digraph object)
-  (succ digraph object))
+  (copy-list (succ digraph object)))
 
 (defun neighbors (digraph object)
   (union (predecessors digraph object)
@@ -89,6 +89,11 @@
   (pushnew successor (succ digraph predecessor) :test (digraph-test digraph))
   (values))
 
+(defun insert-chain (digraph predecessor successor &rest later-successors)
+  (insert-edge digraph predecessor successor)
+  (when later-successors
+    (apply #'insert-chain digraph successor later-successors)))
+
 
 (defun remove-edge (digraph predecessor successor)
   (removef (succ digraph predecessor) successor :test (digraph-test digraph))
@@ -96,8 +101,8 @@
   (values))
 
 (defun remove-vertex (digraph object)
-  (let ((ps (predecessors digraph object))
-        (ss (successors digraph object))
+  (let ((ps (pred digraph object))
+        (ss (succ digraph object))
         (test (digraph-test digraph)))
     (loop :for p :in ps :do (removef (succ digraph p) object :test test))
     (loop :for s :in ss :do (removef (pred digraph s) object :test test)))
@@ -109,10 +114,10 @@
   (length (neighbors digraph object)))
 
 (defun degree-in (digraph object)
-  (length (predecessors digraph object)))
+  (length (pred digraph object)))
 
 (defun degree-out (digraph object)
-  (length (successors digraph object)))
+  (length (succ digraph object)))
 
 
 (defun size (digraph)
@@ -169,16 +174,116 @@
     copy))
 
 
+;;;; Traversal ----------------------------------------------------------------
+;;; Adapted from http://algorithms.wtf/
+
+(defun mapc-depth-first (function digraph start-vertex)
+  (let ((seen nil))
+    (labels ((recur (vertex)
+               (when (not (member vertex seen :test (digraph-test digraph)))
+                 (push vertex seen)
+                 (funcall function vertex)
+                 (mapcar #'recur (succ digraph vertex)))))
+      (when (contains-vertex-p digraph start-vertex)
+        (recur start-vertex))))
+  nil)
+
+(defun mapc-breadth-first (function digraph start-vertex)
+  (let ((seen nil)
+        (remaining nil))
+    (labels ((recur (vertex)
+               (when (not (member vertex seen :test (digraph-test digraph)))
+                 (push vertex seen)
+                 (funcall function vertex)
+                 ;;; todo maybe use jpl queues here...
+                 (appendf remaining (succ digraph vertex)))
+               (when remaining
+                 (recur (pop remaining)))))
+      (when (contains-vertex-p digraph start-vertex)
+        (recur start-vertex))))
+  nil)
+
+
+(defun map-depth-first (function digraph start-vertex)
+  (let ((result nil))
+    (mapc-depth-first (lambda (v) (push (funcall function v) result))
+                      digraph start-vertex)
+    (nreverse result)))
+
+(defun map-breadth-first (function digraph start-vertex)
+  (let ((result nil))
+    (mapc-breadth-first (lambda (v) (push (funcall function v) result))
+                        digraph start-vertex)
+    (nreverse result)))
+
+
+(defun roots (digraph)
+  (remove-if-not (lambda (v) (null (pred digraph v)))
+                 (vertices digraph)))
+
+(defun leafs (digraph)
+  (remove-if-not (lambda (v) (null (succ digraph v)))
+                 (vertices digraph)))
+
+
+(defun mapc-topological (function digraph)
+  (let ((status (make-hash-table-portably
+                  :test (digraph-test digraph)
+                  :hash-function (digraph-hash-function digraph))))
+    (labels
+        ((visit (vertex)
+           (ecase (gethash vertex status :new)
+             (:active
+              (error "Cycle detected during topological map involving vertex ~S"
+                     vertex))
+             (:new (recur vertex))
+             (:done nil)))
+         (recur (vertex)
+           (setf (gethash vertex status) :active)
+           (mapc #'visit (succ digraph vertex))
+           (setf (gethash vertex status) :done)
+           (funcall function vertex)))
+      (mapc #'visit (roots digraph))))
+  nil)
+
+(defun map-topological (function digraph)
+  (let ((result nil))
+    (mapc-topological (lambda (v) (push (funcall function v) result)) digraph)
+    (nreverse result)))
+
+
 ;;;; Scratch ------------------------------------------------------------------
-(defparameter *d* (make-digraph))
+(defun make-test-digraph ()
+  ;; a ---->  middle  ----> z         ORPHAN
+  ;; ^          ^  ^
+  ;; |          |  |
+  ;; B ---------+  |
+  ;; |             |          +-------------------+
+  ;; v             |          |                   v
+  ;; c --------> dogs        FOO ----> bar ----> baz
+  ;; ^                        |
+  ;; |                        |
+  ;; +------------------------+
+  (let ((g (make-digraph
+             :initial-vertices
+             '(a b c dogs middle z orphan foo bar baz))))
+    (insert-edge g 'a 'middle)
+    (insert-edge g 'b 'middle)
+    (insert-edge g 'b 'a)
+    (insert-edge g 'middle 'z)
+    ; (insert-edge g 'z 'z)
+    (insert-edge g 'b 'c)
+    (insert-edge g 'c 'dogs)
+    (insert-edge g 'dogs 'middle)
+    ; (insert-edge g 'dogs 'c)
+    (insert-edge g 'foo 'baz)
+    (insert-edge g 'foo 'bar)
+    (insert-edge g 'bar 'baz)
+    g))
 
 
-(insert-vertex *d* 'a)
-(insert-vertex *d* 'b)
-(insert-vertex *d* 'c)
-
-(insert-edge *d* 'b 'c)
-
-(remove-edge *d* 'a 'a)
-(remove-vertex *d* 'a)
-; (dump *d*)
+#+scratch
+(progn
+  (defparameter *d* (make-test-digraph))
+  (setf cl-dot:*dot-path* "/usr/local/bin/dot")
+  (digraph.dot:draw *d*))
