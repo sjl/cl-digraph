@@ -9,6 +9,8 @@
 
   :depends-on ()
 
+  :in-order-to ((asdf:test-op (asdf:test-op :digraph-test)))
+
   :serial t
   :components ((:module "vendor" :serial t
                 :components ((:file "quickutils-package")

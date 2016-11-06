@@ -7,3 +7,6 @@
 
 (defun run-tests ()
   (1am:run))
+
+(define-test foo
+  (is (= 1 2)))
