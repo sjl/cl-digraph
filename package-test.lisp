@@ -2,6 +2,7 @@
   (:use
     :cl
     :1am
-    :digraph)
+    :digraph
+    :digraph.quickutils)
   (:export
     :run-tests))

@@ -46,10 +46,13 @@
   `(cdr (gethash ,object (digraph-nodes ,digraph))))
 
 
-
 ;;;; Basic API ----------------------------------------------------------------
 (defun vertices (digraph)
   (hash-table-keys (digraph-nodes digraph)))
+
+(defun edges (digraph)
+  (map-edges #'cons digraph))
+
 
 (defun predecessors (digraph object)
   (pred digraph object))
@@ -59,7 +62,7 @@
 
 (defun neighbors (digraph object)
   (union (predecessors digraph object)
-         (predecessors digraph object)
+         (successors digraph object)
          :test (digraph-test digraph)))
 
 
@@ -155,6 +158,7 @@
   (funcall (intern "PRINT-HASH-TABLE" (find-package :losh))
            (digraph-nodes digraph))
   (values))
+
 
 ;;;; Copying ------------------------------------------------------------------
 (defun copy-digraph (digraph)
