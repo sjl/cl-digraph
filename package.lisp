@@ -27,8 +27,6 @@
     :count-vertices
     :count-edges
 
-    :do-vertices
-    :do-edges
     :mapc-vertices
     :mapc-edges
     :map-vertices
@@ -38,5 +36,7 @@
     :map-breadth-first
     :mapc-depth-first
     :mapc-breadth-first
+
+    :topological-sort
 
     :copy-digraph))

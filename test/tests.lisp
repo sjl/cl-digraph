@@ -18,28 +18,35 @@
 ;;;; Tests --------------------------------------------------------------------
 (define-test make-digraph
   (let ((g (make-digraph)))
-    (is (zerop (size g)))
+    (is (zerop (count-vertices g)))
     (is (same () (vertices g)))
     (is (same () (edges g))))
   (let ((g (make-digraph :initial-vertices '(a b c))))
-    (is (= 3 (size g)))
+    (is (= 3 (count-vertices g)))
     (is (same '(a b c) (vertices g)))
     (is (same () (edges g))))
   (let ((g (make-digraph :initial-vertices '(a b a c a a))))
-    (is (= 3 (size g)))
+    (is (= 3 (count-vertices g)))
     (is (same '(a b c) (vertices g)))
     (is (same () (edges g)))))
 
 
 (define-test insert-vertex
   (let ((g (make-digraph)))
+    (is (= 0 (count-vertices g)))
+    (is (same '() (vertices g)))
+
     (insert-vertex g 'a)
+    (is (= 1 (count-vertices g)))
+    (is (same '(a) (vertices g)))
+
     (insert-vertex g 'b)
-    (insert-vertex g 'c)
+    (is (= 2 (count-vertices g)))
+    (is (same '(a b) (vertices g)))
+
     (insert-vertex g 'a) ; dup
-    (is (= 3 (size g)))
-    (is (same '(a b c) (vertices g)))
-    (is (same () (edges g)))))
+    (is (= 2 (count-vertices g)))
+    (is (same '(a b) (vertices g)))))
 
 (define-test insert-edge
   (let ((g (make-digraph :initial-vertices '(a b c))))

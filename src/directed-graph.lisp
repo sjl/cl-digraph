@@ -17,9 +17,10 @@
 
 ;;;; Data ---------------------------------------------------------------------
 (defclass digraph ()
-  ((nodes :initarg :nodes :accessor digraph-nodes)
-   (test :initarg :test :accessor digraph-test)
-   (hash-function :initarg :hash-function :accessor digraph-hash-function)))
+  ((nodes :initarg :nodes :reader digraph-nodes)
+   (test :initarg :test :reader digraph-test)
+   (hash-function :initarg :hash-function :reader digraph-hash-function))
+  (:documentation "A directed graph.  Use `make-digraph` to create one."))
 
 (defun make-digraph (&key initial-vertices
                      (test #'eql)
@@ -104,7 +105,7 @@
   (nth-value 1 (gethash vertex (digraph-nodes digraph))))
 
 (defun contains-edge-p (digraph predecessor successor)
-  "Return whether the graph contains and edge from `predecessor` to `successor`."
+  "Return whether the graph contains an edge from `predecessor` to `successor`."
   (ensure-boolean (member successor (succ digraph predecessor)
                           :test (digraph-test digraph))))
 
@@ -399,10 +400,8 @@
       (mapc #'visit (roots digraph))))
   nil)
 
-(defun topological-sort (function digraph)
-  "Apply `function` to the vertices of `digraph` in topological order.
-
-  Returns a fresh list with the results.
+(defun topological-sort (digraph)
+  "Return a fresh list of the vertices of `digraph` in topological order.
 
   Edges are treated as meaning \"depends on\", so an edge `A --> B` means \"A
   depends on B\" and that B must come before A in the resulting list.  Aside
@@ -414,7 +413,7 @@
 
   "
   (let ((result nil))
-    (topological-sort% (lambda (v) (push (funcall function v) result)) digraph)
+    (topological-sort% (lambda (v) (push v result)) digraph)
     (nreverse result)))
 
 

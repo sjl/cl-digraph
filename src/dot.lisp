@@ -29,11 +29,12 @@
   (successors *current-digraph* vertex))
 
 
-(defun draw (digraph &key (filename "digraph.png"))
+(defun draw (digraph &key (filename "digraph.png") (format :png))
+  "Draw `digraph` with cl-dot."
   (let ((*current-digraph* digraph))
     (cl-dot:dot-graph
       (cl-dot:generate-graph-from-roots 'digraph (find-dot-roots digraph))
       filename
-      :format :png))
+      :format format))
   digraph)
 
