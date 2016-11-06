@@ -23,7 +23,7 @@
 
 (defmethod cl-dot:graph-object-node ((graph (eql 'digraph)) (vertex t))
   (make-instance 'cl-dot:node
-    :attributes `(:label ,vertex :shape :circle)))
+    :attributes `(:label ,(format nil "~A" vertex) :shape :circle)))
 
 (defmethod cl-dot:graph-object-points-to ((graph (eql 'digraph)) (vertex t))
   (successors *current-digraph* vertex))
