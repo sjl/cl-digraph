@@ -23,7 +23,9 @@
     :degree
     :degree-in
     :degree-out
-    :size
+
+    :count-vertices
+    :count-edges
 
     :do-vertices
     :do-edges
