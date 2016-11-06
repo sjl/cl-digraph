@@ -1,16 +1,36 @@
 (in-package :digraph)
 
 
+
+;;;; Utils --------------------------------------------------------------------
+(defun make-hash-table-portably (&key size test hash-function)
+  ;; Only try to pass :hash-function if we were given it, so we don't explode in
+  ;; implementations that don't support it.
+  ;;
+  ;; Also, use `apply` instead of a simple `if` because we don't want spurious
+  ;; compiler warnings...  This is ugly.
+  (apply #'make-hash-table :test test :size size
+         (if hash-function
+           (list :hash-function hash-function)
+           '())))
+
+
 ;;;; Data ---------------------------------------------------------------------
 (defclass digraph ()
   ((nodes :initarg :nodes :accessor digraph-nodes)
-   (test :initarg :test :accessor digraph-test)))
+   (test :initarg :test :accessor digraph-test)
+   (hash-function :initarg :hash-function :accessor digraph-hash-function)))
 
-(defun make-digraph (&key (test #'eql) initial-vertices)
+(defun make-digraph (&key initial-vertices
+                     (test #'eql)
+                     (hash-function nil))
   (let ((digraph (make-instance 'digraph
-                   :nodes (make-hash-table :test test
-                                           :size (length initial-vertices))
-                   :test test)))
+                   :nodes (make-hash-table-portably
+                            :test test
+                            :size (length initial-vertices)
+                            :hash-function hash-function)
+                   :test test
+                   :hash-function hash-function)))
     (mapc (curry #'insert-vertex digraph) initial-vertices)
     digraph))
 
@@ -25,13 +45,6 @@
 (defmacro succ (digraph object)
   `(cdr (gethash ,object (digraph-nodes ,digraph))))
 
-
-(defun copy-digraph (digraph)
-  ;; todo make this faster, but at least this works
-  (let ((copy (make-digraph :test (digraph-test digraph)
-                            :initial-vertices (vertices digraph))))
-    (do-edges (p s digraph) (insert-edge digraph p s))
-    copy))
 
 
 ;;;; Basic API ----------------------------------------------------------------
@@ -109,10 +122,10 @@
     :do (progn ,@body)))
 
 (defmacro do-edges ((predecessor-symbol successor-symbol digraph) &body body)
-  (with-gensyms (preds succs)
+  (with-gensyms (succs)
     `(loop
       :for ,predecessor-symbol :being :the hash-keys :of (digraph-nodes ,digraph)
-      :using (hash-value (,preds . ,succs))
+      :using (hash-value (nil . ,succs))
       :do (loop :for ,successor-symbol :in ,succs ; i miss u, iterate
                 :do (progn ,@body)))))
 
@@ -143,6 +156,14 @@
            (digraph-nodes digraph))
   (values))
 
+;;;; Copying ------------------------------------------------------------------
+(defun copy-digraph (digraph)
+  ;; todo make this faster, but at least this works
+  (let ((copy (make-digraph :test (digraph-test digraph)
+                            :initial-vertices (vertices digraph))))
+    (do-edges (p s digraph) (insert-edge digraph p s))
+    copy))
+
 
 ;;;; Scratch ------------------------------------------------------------------
 (defparameter *d* (make-digraph))
@@ -156,4 +177,4 @@
 
 (remove-edge *d* 'a 'a)
 (remove-vertex *d* 'a)
-(dump *d*)
+; (dump *d*)

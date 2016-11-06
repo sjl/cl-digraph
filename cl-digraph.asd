@@ -16,3 +16,20 @@
                (:file "package")
                (:module "src" :serial t
                 :components ((:file "directed-graph")))))
+
+
+
+(asdf:defsystem #:digraph-test
+  :name "digraph-test"
+
+  :depends-on (#:1am)
+
+  :serial t
+  :components ((:file "package-test")
+               (:module "test"
+                :serial t
+                :components ((:file "tests"))))
+
+  :perform (asdf:test-op
+             (op system)
+             (uiop:symbol-call :digraph-test :run-tests)))
