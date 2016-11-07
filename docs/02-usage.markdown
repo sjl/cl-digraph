@@ -345,4 +345,28 @@ it depends on.  cl-digraph can produce a list in this order with the
     (C B A D)
     (B C A D)
 
+An error will be signaled if the digraph contains a cycle.
+
 [topologically sorted]: https://en.wikipedia.org/wiki/Topological_sorting
+
+Drawing
+-------
+
+If you have [Graphviz][] installed, you can draw digraph objects to images with
+the [cl-dot][] library by loading the optional `cl-digraph.dot` system:
+
+    :::lisp
+    (ql:quickload 'cl-digraph.dot)
+
+    (defparameter *d*
+      (digraph:make-digraph :initial-vertices '(a b c d foo bar)))
+
+    (loop :for (from to) :in '((a b) (a c) (b d) (foo bar) (bar bar))
+          :do (digraph:insert-edge *d* from to))
+
+    (digraph.dot:draw *d* :filename "digraph.png" :format :png)
+
+![Digraph PNG](http://i.imgur.com/TtyGQfM.png)
+
+[Graphviz]: http://www.graphviz.org/
+[cl-dot]: https://github.com/michaelw/cl-dot
