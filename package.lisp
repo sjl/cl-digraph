@@ -39,4 +39,6 @@
 
     :topological-sort
 
+    :reachablep
+
     :copy-digraph))

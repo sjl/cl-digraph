@@ -417,6 +417,29 @@
     (nreverse result)))
 
 
+(defun reachablep (digraph start target &key (strategy :breadth-first))
+  "Return `t` if it is possible to reach `target` from `start`, otherwise `nil`.
+
+  All vertices are reachable from themselves.
+
+  Otherwise a `target` is reachable from `start` if a directed path exists from
+  the start to the target.
+
+  `strategy` will be used to determine how to traverse the graph when searching
+  for a path, and can be one of `:breadth-first` or `:depth-first`.
+
+  "
+  (let* ((traverse (ecase strategy
+                     (:breadth-first #'mapc-breadth-first)
+                     (:depth-first #'mapc-depth-first)))
+         (test (digraph-test digraph))
+         (check (lambda (vertex)
+                  (when (funcall test vertex target)
+                    (return-from reachablep t)))))
+    (funcall traverse check digraph start)
+    nil))
+
+
 ;;;; Scratch ------------------------------------------------------------------
 (defun make-test-digraph ()
   ;; a ---->  middle  ----> z         ORPHAN

@@ -191,3 +191,12 @@
     (is (= 1 (degree-out g 'z)))
     (is (= 0 (degree g 'orphan)))))
 
+
+(define-test reachablep
+  (let ((g (make-simple-digraph)))
+    (is (reachablep g 'orphan 'orphan))
+    (is (reachablep g 'b 'a))
+    (is (reachablep g 'b 'z))
+    (is (not (reachablep g 'a 'b)))
+    (is (not (reachablep g 'z 'orphan)))))
+

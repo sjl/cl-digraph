@@ -240,6 +240,22 @@ Return a fresh list of the neighbors of `vertex`.
 
 Return a fresh list of the predecessors of `vertex`.
 
+### `REACHABLEP` (function)
+
+    (REACHABLEP DIGRAPH START TARGET &KEY (STRATEGY :BREADTH-FIRST))
+
+Return `t` if it is possible to reach `target` from `start`, otherwise `nil`.
+
+  All vertices are reachable from themselves.
+
+  Otherwise a `target` is reachable from `start` if a directed path exists from
+  the start to the target.
+
+  `strategy` will be used to determine how to traverse the graph when searching
+  for a path, and can be one of `:breadth-first` or `:depth-first`.
+
+  
+
 ### `REMOVE-EDGE` (function)
 
     (REMOVE-EDGE DIGRAPH PREDECESSOR SUCCESSOR)
