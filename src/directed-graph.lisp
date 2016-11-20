@@ -1,7 +1,5 @@
 (in-package :digraph)
 
-
-
 ;;;; Utils --------------------------------------------------------------------
 (defun make-hash-table-portably (&key (size 0) test hash-function)
   ;; Only try to pass :hash-function if we were given it, so we don't explode in
@@ -72,6 +70,11 @@
 
 
 ;;;; Basic API ----------------------------------------------------------------
+(defun emptyp (digraph)
+  "Return `t` if `digraph` has no vertices or edges, `nil` otherwise."
+  (zerop (hash-table-count (digraph-nodes digraph))))
+
+
 (defun vertices (digraph)
   "Return a fresh list of the vertices of `digraph`."
   (hash-table-keys (digraph-nodes digraph)))
@@ -372,10 +375,24 @@
 
 
 (defun roots (digraph)
+  "Return all root vertices in `digraph`.
+
+  This is currently O(vertices).
+
+  A root is a vertex with no incoming edges (i.e. in-degree 0).
+
+  "
   (remove-if-not (lambda (v) (null (pred digraph v)))
                  (vertices digraph)))
 
 (defun leafs (digraph)
+  "Return all leaf vertices in `digraph`.
+
+  This is currently O(vertices).
+
+  A root is a vertex with no outgoing edges (i.e. out-degree 0).
+
+  "
   (remove-if-not (lambda (v) (null (succ digraph v)))
                  (vertices digraph)))
 

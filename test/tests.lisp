@@ -20,15 +20,34 @@
   (let ((g (make-digraph)))
     (is (zerop (count-vertices g)))
     (is (same () (vertices g)))
-    (is (same () (edges g))))
+    (is (same () (edges g)))
+    (is (emptyp g)))
   (let ((g (make-digraph :initial-vertices '(a b c))))
     (is (= 3 (count-vertices g)))
     (is (same '(a b c) (vertices g)))
-    (is (same () (edges g))))
+    (is (same () (edges g)))
+    (is (not (emptyp g))))
   (let ((g (make-digraph :initial-vertices '(a b a c a a))))
     (is (= 3 (count-vertices g)))
     (is (same '(a b c) (vertices g)))
-    (is (same () (edges g)))))
+    (is (same () (edges g)))
+    (is (not (emptyp g)))))
+
+
+(define-test roots-and-leafs
+  (let ((g (make-digraph)))
+    (is (same () (roots g)))
+    (is (same () (leafs g)))
+    (insert-vertex g 'a)
+    (insert-vertex g 'b)
+    (is (same '(a b) (roots g)))
+    (is (same '(a b) (leafs g)))
+    (insert-edge g 'a 'b)
+    (is (same '(a) (roots g)))
+    (is (same '(b) (leafs g)))
+    (insert-edge g 'b 'a)
+    (is (same () (roots g)))
+    (is (same () (leafs g)))))
 
 
 (define-test insert-vertex

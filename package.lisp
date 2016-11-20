@@ -4,8 +4,13 @@
     :digraph
     :make-digraph
 
+    :emptyp
+
     :vertices
     :edges
+
+    :roots
+    :leafs
 
     :predecessors
     :successors

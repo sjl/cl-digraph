@@ -78,6 +78,12 @@ Return a fresh list of the edges of `digraph`.
 
   
 
+### `EMPTYP` (function)
+
+    (EMPTYP DIGRAPH)
+
+Return `t` if `digraph` has no vertices or edges, `nil` otherwise.
+
 ### `INSERT-EDGE` (function)
 
     (INSERT-EDGE DIGRAPH PREDECESSOR SUCCESSOR)
@@ -99,6 +105,18 @@ Insert `vertex` into the graph if it is not already a member.
 
   Returns `t` if the vertex was already in the graph, or `nil` if it was
   inserted.
+
+  
+
+### `LEAFS` (function)
+
+    (LEAFS DIGRAPH)
+
+Return all leaf vertices in `digraph`.
+
+  This is currently O(vertices).
+
+  A root is a vertex with no outgoing edges (i.e. out-degree 0).
 
   
 
@@ -275,6 +293,18 @@ Remove `vertex` from the graph if present.
   If there are any edges to/from `vertex` they will be automatically removed.
 
   Returns `t` if there was such a vertex, or `nil` if not.
+
+  
+
+### `ROOTS` (function)
+
+    (ROOTS DIGRAPH)
+
+Return all root vertices in `digraph`.
+
+  This is currently O(vertices).
+
+  A root is a vertex with no incoming edges (i.e. in-degree 0).
 
   
 
