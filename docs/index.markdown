@@ -13,5 +13,5 @@ not *terrible*, but is not a high priority.
 
 It is currently not thread-safe, but this may happen in the future.
 
-The test suite currently passes in SBCL, CCL, ECL, and ABCL on OS X.  Further
-testing is welcome.
+The test suite currently passes in SBCL, CCL, ECL, and ABCL on OS X and Debian.
+Further testing is welcome.
