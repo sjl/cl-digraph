@@ -11,5 +11,7 @@ for Common Lisp.
 cl-digraph focuses on simplicity, correctness, and usability.  Performance is
 not *terrible*, but is not a high priority.
 
+It is currently not thread-safe, but this may happen in the future.
+
 The test suite currently passes in SBCL, CCL, ECL, and ABCL on OS X.  Further
 testing is welcome.
