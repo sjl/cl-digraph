@@ -268,16 +268,6 @@
     result))
 
 
-(defun dump (digraph)
-  "Don't use this."
-  (format t "Digraph :TEST ~A~%:CONTENTS " (digraph-test digraph))
-  (finish-output)
-  (ql:quickload :losh :silent t)
-  (funcall (intern "PRINT-HASH-TABLE" (find-package :losh))
-           (digraph-nodes digraph))
-  (values))
-
-
 ;;;; Copying ------------------------------------------------------------------
 (defun copy-digraph (digraph)
   "Create a fresh copy of `digraph`.
