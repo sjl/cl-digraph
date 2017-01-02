@@ -2,15 +2,12 @@
 
 ;;;; Utils --------------------------------------------------------------------
 (defun make-hash-table-portably (&key (size 0) test hash-function)
-  ;; Only try to pass :hash-function if we were given it, so we don't explode in
-  ;; implementations that don't support it.
-  ;;
-  ;; Also, use `apply` instead of a simple `if` because we don't want spurious
-  ;; compiler warnings...  This is ugly.
-  (apply #'make-hash-table :test test :size size
-         (if hash-function
-           (list :hash-function hash-function)
-           '())))
+  (make-hash-table
+    :test test
+    :size size
+    ;; Don't explode if the implementation doesn't support :hash-function.
+    :allow-other-keys t
+    :hash-function hash-function))
 
 
 ;;;; Data ---------------------------------------------------------------------
