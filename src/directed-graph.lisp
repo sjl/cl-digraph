@@ -433,7 +433,7 @@
   for a path, and can be one of `:breadth-first` or `:depth-first`.
 
   "
-  (let* ((traverse (ecase strategy
+  (let* ((traverse (ccase strategy
                      (:breadth-first #'mapc-breadth-first)
                      (:depth-first #'mapc-depth-first)))
          (test (digraph-test digraph))
