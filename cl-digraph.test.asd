@@ -2,7 +2,7 @@
   :description "Test suite for cl-digraph"
 
   :author "Steve Losh <steve@stevelosh.com>"
-  :license "MIT/X11"
+  :license "MIT"
 
   :depends-on (:cl-digraph
                :1am)

@@ -3,7 +3,7 @@ for Common Lisp.
 
 [directed graph]: https://en.wikipedia.org/wiki/Directed_graph
 
-* **License:** MIT/X11
+* **License:** MIT
 * **Documentation:** <http://sjl.bitbucket.org/cl-digraph/>
 * **Mercurial:** <http://bitbucket.org/sjl/cl-digraph/>
 * **Git:** <http://github.com/sjl/cl-digraph/>
