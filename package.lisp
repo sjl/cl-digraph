@@ -12,6 +12,9 @@
     :roots
     :leafs
 
+    :rootp
+    :leafp
+
     :predecessors
     :successors
     :neighbors

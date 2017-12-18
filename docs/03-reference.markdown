@@ -108,6 +108,12 @@ Insert `vertex` into the graph if it is not already a member.
 
   
 
+### `LEAFP` (function)
+
+    (LEAFP DIGRAPH VERTEX)
+
+Return whether `vertex` is a leaf vertex in `digraph`.
+
 ### `LEAFS` (function)
 
     (LEAFS DIGRAPH)
@@ -295,6 +301,12 @@ Remove `vertex` from the graph if present.
   Returns `t` if there was such a vertex, or `nil` if not.
 
   
+
+### `ROOTP` (function)
+
+    (ROOTP DIGRAPH VERTEX)
+
+Return whether `vertex` is a root vertex in `digraph`.
 
 ### `ROOTS` (function)
 

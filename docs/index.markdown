@@ -1,8 +1,6 @@
 cl-digraph is an implementation of a mutable [directed graph][] data structure
 for Common Lisp.
 
-[directed graph]: https://en.wikipedia.org/wiki/Directed_graph
-
 * **License:** MIT
 * **Documentation:** <https://sjl.bitbucket.io/cl-digraph/>
 * **Mercurial:** <http://bitbucket.org/sjl/cl-digraph/>
@@ -15,3 +13,5 @@ It is currently not thread-safe, but this may happen in the future.
 
 The test suite currently passes in SBCL, CCL, ECL, and ABCL on OS X and Debian.
 Further testing is welcome.
+
+[directed graph]: https://en.wikipedia.org/wiki/Directed_graph

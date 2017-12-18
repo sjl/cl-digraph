@@ -214,6 +214,15 @@
     result))
 
 
+(defun rootp (digraph vertex)
+  "Return whether `vertex` is a root vertex in `digraph`."
+  (null (pred digraph vertex)))
+
+(defun leafp (digraph vertex)
+  "Return whether `vertex` is a leaf vertex in `digraph`."
+  (null (succ digraph vertex)))
+
+
 ;;;; Iteration ----------------------------------------------------------------
 (defun mapc-vertices (function digraph)
   "Call `function` on each vertex in `digraph`.
@@ -369,7 +378,7 @@
   A root is a vertex with no incoming edges (i.e. in-degree 0).
 
   "
-  (remove-if-not (lambda (v) (null (pred digraph v)))
+  (remove-if-not (curry #'rootp digraph)
                  (vertices digraph)))
 
 (defun leafs (digraph)
@@ -380,7 +389,7 @@
   A root is a vertex with no outgoing edges (i.e. out-degree 0).
 
   "
-  (remove-if-not (lambda (v) (null (succ digraph v)))
+  (remove-if-not (curry #'leafp digraph)
                  (vertices digraph)))
 
 

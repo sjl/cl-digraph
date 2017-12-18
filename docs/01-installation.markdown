@@ -1,9 +1,7 @@
 Installation
 ============
 
-cl-digraph is compatible with Quicklisp, but not *in* Quicklisp (yet?).  You can
-clone the repository into your [Quicklisp local-projects][local] directory for
-now.
+cl-digraph can be installed with [Quicklisp][]: `(ql:quickload :cl-digraph)`
 
 The `cl-digraph` system contains the core API and has no dependencies.
 
@@ -12,6 +10,6 @@ using [cl-dot][].
 
 The `cl-digraph.test` system contains the test suite, which uses [1am][].
 
-[local]: https://www.quicklisp.org/beta/faq.html#local-project
+[quicklisp]: https://quicklisp.org/
 [1am]: https://github.com/lmj/1am
 [cl-dot]: https://github.com/michaelw/cl-dot
