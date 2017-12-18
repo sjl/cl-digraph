@@ -5,6 +5,12 @@ Here's the list of changes in each released version.
 
 [TOC]
 
+v1.2.0
+------
+
+Added `rootp` and `leafp` predicates to check whether a vertex is a root/leaf in
+a digraph.
+
 v1.1.0
 ------
 
