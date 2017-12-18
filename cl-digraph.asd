@@ -3,8 +3,8 @@
 
   :author "Steve Losh <steve@stevelosh.com>"
 
-  :license "MIT"
-  :version "1.1.0"
+  :license "MIT/X11"
+  :version "1.2.0"
 
   :depends-on ()
 
