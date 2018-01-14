@@ -1,5 +1,5 @@
 (asdf:defsystem :cl-digraph
-  :description "Simple directed graphs for Common Lisp."
+  :description "Simple directed graphs data structure for Common Lisp."
 
   :author "Steve Losh <steve@stevelosh.com>"
 
