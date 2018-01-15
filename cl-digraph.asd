@@ -1,7 +1,7 @@
 (asdf:defsystem :cl-digraph
   :description "Simple directed graphs for Common Lisp."
-
   :author "Steve Losh <steve@stevelosh.com>"
+  :homepage "https://sjl.bitbucket.io/cl-digraph/"
 
   :license "MIT/X11"
   :version "1.2.0"
