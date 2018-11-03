@@ -4,7 +4,7 @@
   :homepage "https://sjl.bitbucket.io/cl-digraph/"
 
   :license "MIT/X11"
-  :version "1.2.0"
+  :version "1.2.1"
 
   :depends-on ()
 

@@ -33,6 +33,23 @@
     (is (same () (edges g)))
     (is (not (emptyp g)))))
 
+(define-test copy-digraph
+  (let ((g (make-digraph :initial-vertices '(a b c)))
+        (h nil))
+    (insert-edge g 'a 'b)
+    (is (same '(a b c) (vertices g)))
+    (is (same '((a . b)) (edges g)))
+    (setf h (copy-digraph g))
+    (is (same '(a b c) (vertices h)))
+    (is (same '((a . b)) (edges h)))
+    (remove-edge h 'a 'b)
+    (remove-vertex h 'c)
+    (is (same '(a b) (vertices h)))
+    (is (same '() (edges h)))
+    ;; make sure the original didn't change
+    (is (same '(a b c) (vertices g)))
+    (is (same '((a . b)) (edges g)))))
+
 
 (define-test roots-and-leafs
   (let ((g (make-digraph)))

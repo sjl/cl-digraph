@@ -285,7 +285,7 @@
   (let ((copy (make-digraph :test (digraph-test digraph)
                             :hash-function (digraph-hash-function digraph)
                             :initial-vertices (vertices digraph))))
-    (do-edges (p s digraph) (insert-edge digraph p s))
+    (do-edges (p s digraph) (insert-edge copy p s))
     copy))
 
 

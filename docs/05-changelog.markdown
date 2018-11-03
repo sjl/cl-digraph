@@ -5,6 +5,11 @@ Here's the list of changes in each released version.
 
 [TOC]
 
+v1.2.1
+------
+
+Fixed a bug in `copy-digraph`.
+
 v1.2.0
 ------
 
