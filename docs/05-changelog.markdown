@@ -5,6 +5,12 @@ Here's the list of changes in each released version.
 
 [TOC]
 
+v1.3.0
+------
+
+Added the `arbitrary-vertex` function to return an arbitrary vertex of
+a digraph.
+
 v1.2.1
 ------
 

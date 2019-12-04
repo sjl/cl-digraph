@@ -12,6 +12,16 @@ don't touch it.
 
 ## Package `DIGRAPH`
 
+### `ARBITRARY-VERTEX` (function)
+
+    (ARBITRARY-VERTEX DIGRAPH)
+
+Return an arbitrary vertex of `digraph` and `t`.
+
+  If the digraph is empty, `(values nil nil)` will be returned instead.
+
+  
+
 ### `CONTAINS-EDGE-P` (function)
 
     (CONTAINS-EDGE-P DIGRAPH PREDECESSOR SUCCESSOR)

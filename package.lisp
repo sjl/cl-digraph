@@ -9,6 +9,8 @@
     :vertices
     :edges
 
+    :arbitrary-vertex
+
     :roots
     :leafs
 

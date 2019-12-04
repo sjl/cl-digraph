@@ -236,3 +236,19 @@
     (is (not (reachablep g 'a 'b)))
     (is (not (reachablep g 'z 'orphan)))))
 
+
+(define-test abitrary-vertex
+  (let ((g (make-simple-digraph)))
+    (is (member (arbitrary-vertex g) '(a b middle z orphan)))
+    (remove-vertex g 'b)
+    (is (member (arbitrary-vertex g) '(a middle z orphan)))
+    (remove-vertex g 'middle)
+    (is (member (arbitrary-vertex g) '(a z orphan)))
+    (remove-vertex g 'z)
+    (is (member (arbitrary-vertex g) '(a orphan)))
+    (remove-vertex g 'a)
+    (is (member (arbitrary-vertex g) '(orphan)))
+    (remove-vertex g 'orphan)
+    (is (null (arbitrary-vertex g)))
+    (insert-vertex g 'new)
+    (is (member (arbitrary-vertex g) '(new)))))

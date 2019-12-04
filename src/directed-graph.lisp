@@ -158,6 +158,17 @@
     (apply #'insert-chain digraph successor later-successors)))
 
 
+(defun arbitrary-vertex (digraph)
+  "Return an arbitrary vertex of `digraph` and `t`.
+
+  If the digraph is empty, `(values nil nil)` will be returned instead.
+
+  "
+  (do-vertices (vertex digraph)
+    (return-from arbitrary-vertex (values vertex t)))
+  (values nil nil))
+
+
 (defun remove-edge (digraph predecessor successor)
   "Remove an edge from `predecessor` to `successor` if present.
 

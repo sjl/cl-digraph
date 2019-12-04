@@ -1,10 +1,10 @@
 (asdf:defsystem :cl-digraph
   :description "Simple directed graphs for Common Lisp."
   :author "Steve Losh <steve@stevelosh.com>"
-  :homepage "https://sjl.bitbucket.io/cl-digraph/"
+  :homepage "http://docs.stevelosh.com/cl-digraph/"
 
   :license "MIT/X11"
-  :version "1.2.1"
+  :version "1.3.0"
 
   :depends-on ()
 

@@ -2,9 +2,9 @@ cl-digraph is an implementation of a mutable [directed graph][] data structure
 for Common Lisp.
 
 * **License:** MIT
-* **Documentation:** <https://sjl.bitbucket.io/cl-digraph/>
-* **Mercurial:** <http://bitbucket.org/sjl/cl-digraph/>
-* **Git:** <http://github.com/sjl/cl-digraph/>
+* **Documentation:** <http://docs.stevelosh.com/cl-digraph/>
+* **Mercurial:** <https://hg.sr.ht/~sjl/cl-digraph/>
+* **Git:** <https://github.com/sjl/cl-digraph/>
 
 cl-digraph focuses on simplicity, correctness, and usability.  Performance is
 not *terrible*, but is not a high priority.
