@@ -4,8 +4,8 @@ for Common Lisp.
 [directed graph]: https://en.wikipedia.org/wiki/Directed_graph
 
 * **License:** MIT
-* **Documentation:** <http://docs.stevelosh.com/cl-digraph/>
-* **Mercurial:** <http://hg.sr.ht/~sjl/cl-digraph/>
+* **Documentation:** <https://docs.stevelosh.com/cl-digraph/>
+* **Mercurial:** <https://hg.sr.ht/~sjl/cl-digraph/>
 * **Git:** <https://github.com/sjl/cl-digraph/>
 
 cl-digraph focuses on simplicity, correctness, and usability.  Performance is
