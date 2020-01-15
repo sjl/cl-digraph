@@ -3,7 +3,7 @@ for Common Lisp.
 
 * **License:** MIT
 * **Documentation:** <https://docs.stevelosh.com/cl-digraph/>
-* **Mercurial:** <https://hg.sr.ht/~sjl/cl-digraph/>
+* **Mercurial:** <https://hg.stevelosh.com/cl-digraph/>
 * **Git:** <https://github.com/sjl/cl-digraph/>
 
 cl-digraph focuses on simplicity, correctness, and usability.  Performance is
