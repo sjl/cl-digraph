@@ -5,6 +5,12 @@ Here's the list of changes in each released version.
 
 [TOC]
 
+v1.3.1
+------
+
+[Fixed a bug](https://github.com/sjl/cl-digraph/pull/3) for recent SBCL versions
+when creating a digraph without a custom hash function.
+
 v1.3.0
 ------
 
