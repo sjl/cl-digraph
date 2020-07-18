@@ -2,12 +2,13 @@
 
 ;;;; Utils --------------------------------------------------------------------
 (defun make-hash-table-portably (&key (size 0) test hash-function)
-  (make-hash-table
+  (apply #'make-hash-table
     :test test
     :size size
     ;; Don't explode if the implementation doesn't support :hash-function.
     :allow-other-keys t
-    :hash-function hash-function))
+    (when hash-function
+      (list :hash-function hash-function))))
 
 
 ;;;; Data ---------------------------------------------------------------------
