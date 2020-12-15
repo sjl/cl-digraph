@@ -5,6 +5,12 @@ Here's the list of changes in each released version.
 
 [TOC]
 
+v1.3.2
+------
+
+[Fixed a bug](https://github.com/sjl/cl-digraph/issues/4) where certain kinds of
+cycles were not correctly detected during topological sorting.
+
 v1.3.1
 ------
 

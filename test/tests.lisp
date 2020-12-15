@@ -252,3 +252,22 @@
     (is (null (arbitrary-vertex g)))
     (insert-vertex g 'new)
     (is (member (arbitrary-vertex g) '(new)))))
+
+
+(define-test topological-sort-cycle-detection
+  (let ((g (make-digraph :initial-vertices '(a b c d))))
+    (is (= 4 (length (topological-sort g))))
+    (insert-edge g 'a 'b)
+    (is (= 4 (length (topological-sort g))))
+    (insert-edge g 'b 'c)
+    (is (= 4 (length (topological-sort g))))
+    (insert-edge g 'c 'a)
+    (signals error (topological-sort g))
+    (remove-edge g 'c 'a)
+    (insert-edge g 'd 'd)
+    (signals error (topological-sort g))
+    (remove-edge g 'd 'd)
+    (insert-edge g 'c 'd)
+    (is (= 4 (length (topological-sort g))))
+    (insert-edge g 'd 'b)
+    (signals error (topological-sort g))))

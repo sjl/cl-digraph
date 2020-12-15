@@ -405,6 +405,7 @@
                  (vertices digraph)))
 
 
+(declaim (inline topological-sort%))
 (defun topological-sort% (function digraph)
   (let ((status (make-hash-table-portably
                   :test (digraph-test digraph)
@@ -437,9 +438,12 @@
   An error will be signaled if the graph contains a cycle.
 
   "
-  (let ((result nil))
-    (topological-sort% (lambda (v) (push v result)) digraph)
-    (nreverse result)))
+  (let ((result nil)
+        (i 0))
+    (topological-sort% (lambda (v) (incf i) (push v result)) digraph)
+    (if (= i (count-vertices digraph)) ; make sure there are no rootless cycles
+      (nreverse result)
+      (error "Cycle detected during topological sort."))))
 
 
 (defun reachablep (digraph start target &key (strategy :breadth-first))
@@ -464,39 +468,3 @@
     (funcall traverse check digraph start)
     nil))
 
-
-;;;; Scratch ------------------------------------------------------------------
-(defun make-test-digraph ()
-  ;; a ---->  middle  ----> z         ORPHAN
-  ;; ^          ^  ^
-  ;; |          |  |
-  ;; B ---------+  |
-  ;; |             |          +-------------------+
-  ;; v             |          |                   v
-  ;; c --------> dogs        FOO ----> bar ----> baz
-  ;; ^                        |
-  ;; |                        |
-  ;; +------------------------+
-  (let ((g (make-digraph
-             :initial-vertices
-             '(a b c dogs middle z orphan foo bar baz))))
-    (insert-edge g 'a 'middle)
-    (insert-edge g 'b 'middle)
-    (insert-edge g 'b 'a)
-    (insert-edge g 'middle 'z)
-    ; (insert-edge g 'z 'z)
-    (insert-edge g 'b 'c)
-    (insert-edge g 'c 'dogs)
-    (insert-edge g 'dogs 'middle)
-    ; (insert-edge g 'dogs 'c)
-    (insert-edge g 'foo 'baz)
-    (insert-edge g 'foo 'bar)
-    (insert-edge g 'bar 'baz)
-    g))
-
-
-#+scratch
-(progn
-  (defparameter *d* (make-test-digraph))
-  (setf cl-dot:*dot-path* "/usr/local/bin/dot")
-  (digraph.dot:draw *d*))
