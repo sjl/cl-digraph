@@ -22,8 +22,7 @@ Digraphs can be created with `make-digraph`:
 
     :::lisp
     (digraph:make-digraph)
-    ; =>
-    #<DIGRAPH:DIGRAPH () {1002CFD343}>
+    ; => #<DIGRAPH:DIGRAPH () {1002CFD343}>
 
 Working with Vertices
 ---------------------
@@ -172,7 +171,16 @@ exist in the graph already, or an error will be signaled:
     ; => ((a . b))
 
     (digraph:insert-edge *d* 'cats 'dogs)
-    ; => Error!
+    ; =>
+    ; Cannot add edge with predecessor CATS because it is not in the graph
+    ;    [Condition of type DIGRAPH::MISSING-PREDECESSOR]
+    ;
+    ; Restarts:
+    ;   R 0. CONTINUE - Retry assertion with new value for DIGRAPH::PREDECESSOR.
+    ;   R 1. ABORT    - Exit debugger, returning to top level.
+
+See the [Conditions](#conditions) section for more information about the error
+hierarchy.
 
 Edges can be removed with `remove-edge`.  Removing an edge that's not in the
 graph is silently ignored:
@@ -342,12 +350,69 @@ it depends on.  cl-digraph can produce a list in this order with the
 
     (digraph:topological-sort *d*)
     ; => one of
-    (C B A D)
-    (B C A D)
+    ; (C B A D)
+    ; (B C A D)
 
-An error will be signaled if the digraph contains a cycle.
+A `digraph:topological-sort-cycle` will be signaled if the digraph
+contains a cycle:
+
+    :::lisp
+    (defparameter *d*
+      (digraph:make-digraph :initial-vertices '(a b c d)))
+
+    (digraph:insert-edge *d* 'a 'b) ; a depends on b
+    (digraph:insert-edge *d* 'b 'c) ; b depends on c
+    (digraph:insert-edge *d* 'c 'a) ; c depends on a
+
+    (digraph:topological-sort *d*)
+    ; =>
+    ; Cycle detected during topological sort involving vertex A
+    ;     [Condition of type DIGRAPH:TOPOLOGICAL-SORT-CYCLE]
+    ;
+    ; Restarts:
+    ;   R 0. ABORT - Exit debugger, returning to top level.
+
+See the [Conditions](#conditions) section for more information about the error
+hierarchy.
 
 [topologically sorted]: https://en.wikipedia.org/wiki/Topological_sorting
+
+Conditions
+----------
+
+The following condition types are defined by cl-digraph:
+
+[![condition type hierarchy](../static/conditions.svg)](../static/conditions.svg)
+
+Dotted outlines denote abstract types that are never actually instantiated, but
+can be useful for handling whole classes of errors.
+
+* `digraph-error`: abstract type for digraph-related errors.
+* `missing-vertex`: abstract type for errors signaled when trying to insert an edge involving a vertex that is not in the graph.
+* `missing-predecessor`: error signaled when trying to insert an edge whose predecessor is not in the graph.
+* `missing-successor`: error signaled when trying to insert an edge whose successor is not in the graph.
+* `topological-sort-cycle`: error signaled when trying to topologically sort a graph involving a cycle.
+
+For `missing-vertex` errors of both kinds you can use the `vertex-involved`
+reader to retrieve the offending vertex from the condition object.
+
+For `topological-sort-cycle` errors you can use the `vertex-involved` reader to
+retrieve one of the vertices involved in a cycle from the condition object.
+*Which* vertex of the cycle is returned is arbitrary:
+
+    :::lisp
+    (defparameter *d*
+      (digraph:make-digraph :initial-vertices '(a b c d)))
+
+    (digraph:insert-edge *d* 'a 'b) ; a depends on b
+    (digraph:insert-edge *d* 'b 'c) ; b depends on c
+    (digraph:insert-edge *d* 'c 'a) ; c depends on a
+
+    (handler-case (digraph:topological-sort *d*)
+      (digraph:topological-sort-cycle-error (c)
+        (list :cyclic (digraph:vertex-involved c))))
+    ; =>
+    ; (:CYCLIC A)
 
 Drawing
 -------

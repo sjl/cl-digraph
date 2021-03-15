@@ -28,3 +28,14 @@ don't touch it.
   "
   :title "cl-dot Support")
 
+(d-api:draw-class-hierarchy
+  "docs/static/conditions.svg"
+  '(digraph::digraph-error
+    digraph::missing-vertex
+    digraph::missing-predecessor
+    digraph::missing-successor
+    digraph::topological-sort-cycle)
+  :abstract-classes
+  '(digraph::digraph-error
+    digraph::missing-vertex))
+

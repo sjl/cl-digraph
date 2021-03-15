@@ -3,7 +3,7 @@
 
 ;;;; Utils --------------------------------------------------------------------
 (defmacro define-test (name &body body)
-  `(test ,(symb 'test- name)
+  `(test ,(symb 'test/ name)
     (let ((*package* ,*package*))
       ,@body)))
 
@@ -93,6 +93,14 @@
     (insert-edge g 'b 'c)
     (is (same '((a . b) (b . c))
               (edges g)))))
+
+
+(define-test missing-vertices
+  (let ((g (make-digraph :initial-vertices '(a b))))
+    (insert-edge g 'a 'b)
+    (signals missing-vertex (insert-edge g 'x 'y))
+    (signals missing-predecessor (insert-edge g 'x 'a))
+    (signals missing-successor (insert-edge g 'a 'x))))
 
 
 (define-test remove-vertex
@@ -254,20 +262,48 @@
     (is (member (arbitrary-vertex g) '(new)))))
 
 
+(defmacro has-topo-error (graph involving)
+  (alexandria:once-only (graph involving)
+    `(handler-case (topological-sort ,graph)
+       (topological-sort-cycle (c)
+         (is (member (vertex-involved c) ,involving))))))
+
 (define-test topological-sort-cycle-detection
+  ;; a    b    c    d
   (let ((g (make-digraph :initial-vertices '(a b c d))))
     (is (= 4 (length (topological-sort g))))
+
+    ;; a--->b    c    d
     (insert-edge g 'a 'b)
     (is (= 4 (length (topological-sort g))))
+
+    ;; a--->b--->c    d
     (insert-edge g 'b 'c)
     (is (= 4 (length (topological-sort g))))
+
+    ;; a--->b--->c    d
+    ;; ^         |
+    ;; |_________|
     (insert-edge g 'c 'a)
-    (signals error (topological-sort g))
+    (has-topo-error g '(a b c))
     (remove-edge g 'c 'a)
+
+    ;; a--->b--->c    d--+
+    ;;                ^  |
+    ;;                |  |
+    ;;                +--+
     (insert-edge g 'd 'd)
-    (signals error (topological-sort g))
+    (has-topo-error g '(d))
     (remove-edge g 'd 'd)
+
+    ;; a--->b--->c--->d
     (insert-edge g 'c 'd)
     (is (= 4 (length (topological-sort g))))
+
+    ;; a--->b--->c--->d--+
+    ;;      ^            |
+    ;;      |            |
+    ;;      +------------+
     (insert-edge g 'd 'b)
-    (signals error (topological-sort g))))
+    (has-topo-error g '(b c d))
+    (remove-edge g 'd 'b)))

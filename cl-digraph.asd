@@ -4,7 +4,7 @@
   :homepage "http://docs.stevelosh.com/cl-digraph/"
 
   :license "MIT/X11"
-  :version "1.3.2"
+  :version "1.4.0"
 
   :depends-on ()
 

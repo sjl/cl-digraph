@@ -2,4 +2,5 @@ syntax: glob
 
 scratch.lisp
 *.png
+*.svg
 docs/build

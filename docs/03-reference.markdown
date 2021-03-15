@@ -78,6 +78,10 @@ Return the number of successors of `vertex`.
 
 A directed graph.  Use `make-digraph` to create one.
 
+### `DIGRAPH-ERROR` (class)
+
+Base condition for digraph-related errors.
+
 ### `EDGES` (function)
 
     (EDGES DIGRAPH)
@@ -100,10 +104,13 @@ Return `t` if `digraph` has no vertices or edges, `nil` otherwise.
 
 Insert an edge from `predecessor` to `successor` if not already present.
 
-  The `predecessor` and `successor` vertices must exist in the graph already.
-
   Returns `t` if the edge was already in the graph, or `nil` if it was
   inserted.
+
+  The `predecessor` and `successor` vertices must already exist in the graph.
+  If `predecessor` is not in the graph a `missing-predecessor` error will be
+  signaled.  Otherwise, if `successor` is not in the graph, a `missing-successor`
+  error will be signaled.
 
   
 
@@ -262,6 +269,22 @@ Call `function` on each vertex in `digraph`.
 
   
 
+### `MISSING-PREDECESSOR` (class)
+
+An error signaled when trying to insert an edge whose predecessor is not in the graph.
+
+   `vertex-involved` can be used to retrieve the offending predecessor.
+
+### `MISSING-SUCCESSOR` (class)
+
+An error signaled when trying to insert an edge whose successor is not in the graph.
+
+   `vertex-involved` can be used to retrieve the offending successor.
+
+### `MISSING-VERTEX` (class)
+
+Base condition for errors signaled when inserting an edge with a vertex missing.
+
 ### `NEIGHBORS` (function)
 
     (NEIGHBORS DIGRAPH VERTEX)
@@ -348,9 +371,23 @@ Return a fresh list of the vertices of `digraph` in topological order.
 
   The order in which the vertices are processed is unspecified.
 
-  An error will be signaled if the graph contains a cycle.
+  A `topological-sort-cycle` error will be signaled if the graph contains
+  a cycle.
 
   
+
+### `TOPOLOGICAL-SORT-CYCLE` (class)
+
+An error signaled when topologically sorting a graph that contains a cycle.
+
+   `vertex-involved` can be used to retrieve one of the vertices involved in a
+   cycle.  Which vertex in the cycle is chosen is arbitrary.
+
+### `VERTEX-INVOLVED` (generic function)
+
+    (VERTEX-INVOLVED CONDITION)
+
+Retrieve the vertex involved in the condition.
 
 ### `VERTICES` (function)
 

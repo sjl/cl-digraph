@@ -11,6 +11,52 @@
       (list :hash-function hash-function))))
 
 
+;;;; Errors -------------------------------------------------------------------
+(defgeneric vertex-involved (condition)
+  (:documentation "Retrieve the vertex involved in the condition."))
+
+(define-condition digraph-error (error) ()
+  (:documentation "Base condition for digraph-related errors."))
+
+(define-condition topological-sort-cycle (digraph-error)
+  ((vertex-involved% :initarg :vertex-involved :reader vertex-involved))
+  (:report
+   (lambda (c stream)
+     (format stream "Cycle detected during topological sort involving vertex ~S."
+             (vertex-involved c))))
+  (:documentation
+    "An error signaled when topologically sorting a graph that contains a cycle.
+
+   `vertex-involved` can be used to retrieve one of the vertices involved in a
+   cycle.  Which vertex in the cycle is chosen is arbitrary."))
+
+(define-condition missing-vertex (digraph-error)
+  ((vertex-involved% :initarg :vertex-involved :reader vertex-involved))
+  (:documentation "Base condition for errors signaled when inserting an edge with a vertex missing."))
+
+(define-condition missing-predecessor (missing-vertex) ()
+  (:report
+   (lambda (c stream)
+     (format stream
+             "Cannot add edge with predecessor ~S because it is not in the graph."
+             (vertex-involved c))))
+  (:documentation
+    "An error signaled when trying to insert an edge whose predecessor is not in the graph.
+
+   `vertex-involved` can be used to retrieve the offending predecessor."))
+
+(define-condition missing-successor (missing-vertex) ()
+  (:report
+   (lambda (c stream)
+     (format stream
+             "Cannot add edge with successor ~S because it is not in the graph."
+             (vertex-involved c))))
+  (:documentation
+    "An error signaled when trying to insert an edge whose successor is not in the graph.
+
+   `vertex-involved` can be used to retrieve the offending successor."))
+
+
 ;;;; Data ---------------------------------------------------------------------
 (defclass digraph ()
   ((nodes :initarg :nodes :reader digraph-nodes)
@@ -56,15 +102,14 @@
 
 (defmacro do-vertices ((symbol digraph) &body body)
   `(loop :for ,symbol :being :the hash-keys :of (digraph-nodes ,digraph)
-    :do (progn ,@body)))
+         :do (progn ,@body)))
 
 (defmacro do-edges ((predecessor-symbol successor-symbol digraph) &body body)
   (with-gensyms (succs)
     `(loop
-      :for ,predecessor-symbol :being :the hash-keys :of (digraph-nodes ,digraph)
-      :using (hash-value (nil . ,succs))
-      :do (loop :for ,successor-symbol :in ,succs ; i miss u, iterate
-                :do (progn ,@body)))))
+       :for ,predecessor-symbol :being :the hash-keys :of (digraph-nodes ,digraph)
+       :using (hash-value (nil . ,succs))
+       :do (loop :for ,successor-symbol :in ,succs :do (progn ,@body)))))
 
 
 ;;;; Basic API ----------------------------------------------------------------
@@ -124,18 +169,19 @@
 (defun insert-edge (digraph predecessor successor)
   "Insert an edge from `predecessor` to `successor` if not already present.
 
-  The `predecessor` and `successor` vertices must exist in the graph already.
-
   Returns `t` if the edge was already in the graph, or `nil` if it was
   inserted.
 
+  The `predecessor` and `successor` vertices must already exist in the graph.
+  If `predecessor` is not in the graph a `missing-predecessor` error will be
+  signaled.  Otherwise, if `successor` is not in the graph, a `missing-successor`
+  error will be signaled.
+
   "
-  (assert (contains-vertex-p digraph predecessor) (predecessor)
-    "Cannot add edge with predecessor ~S because it is not in the graph"
-    predecessor)
-  (assert (contains-vertex-p digraph successor) (successor)
-    "Cannot add edge with successor ~S because it is not in the graph"
-    successor)
+  (unless (contains-vertex-p digraph predecessor)
+    (error 'missing-predecessor :vertex-involved predecessor))
+  (unless (contains-vertex-p digraph successor)
+    (error 'missing-successor :vertex-involved successor))
   (prog1
       (contains-edge-p digraph predecessor successor)
     (pushnew predecessor (pred digraph successor) :test (digraph-test digraph))
@@ -286,6 +332,12 @@
     result))
 
 
+(defun find-vertex-if (function digraph)
+  (do-vertices (v digraph)
+    (when (funcall function v)
+      (return-from find-vertex-if v))))
+
+
 ;;;; Copying ------------------------------------------------------------------
 (defun copy-digraph (digraph)
   "Create a fresh copy of `digraph`.
@@ -413,9 +465,7 @@
     (labels
         ((visit (vertex)
            (ecase (gethash vertex status :new)
-             (:active
-              (error "Cycle detected during topological map involving vertex ~S"
-                     vertex))
+             (:active (error 'topological-sort-cycle :vertex-involved vertex))
              (:new (recur vertex))
              (:done nil)))
          (recur (vertex)
@@ -423,8 +473,8 @@
            (mapc #'visit (succ digraph vertex))
            (setf (gethash vertex status) :done)
            (funcall function vertex)))
-      (mapc #'visit (roots digraph))))
-  nil)
+      (mapc #'visit (roots digraph)))
+    status))
 
 (defun topological-sort (digraph)
   "Return a fresh list of the vertices of `digraph` in topological order.
@@ -435,15 +485,19 @@
 
   The order in which the vertices are processed is unspecified.
 
-  An error will be signaled if the graph contains a cycle.
+  A `topological-sort-cycle` error will be signaled if the graph contains
+  a cycle.
 
   "
-  (let ((result nil)
-        (i 0))
-    (topological-sort% (lambda (v) (incf i) (push v result)) digraph)
-    (if (= i (count-vertices digraph)) ; make sure there are no rootless cycles
+  (let* ((result nil)
+         (seen (topological-sort% (lambda (v) (push v result)) digraph)))
+    ;; Make sure there are no rootless cycles.
+    (if (= (hash-table-count seen) (count-vertices digraph))
       (nreverse result)
-      (error "Cycle detected during topological sort."))))
+      (error 'topological-sort-cycle
+             :vertex-involved (find-vertex-if
+                                (lambda (v) (not (gethash v seen)))
+                                digraph)))))
 
 
 (defun reachablep (digraph start target &key (strategy :breadth-first))

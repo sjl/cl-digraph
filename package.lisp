@@ -51,4 +51,11 @@
 
     :reachablep
 
-    :copy-digraph))
+    :copy-digraph
+
+    :digraph-error
+    :missing-vertex
+    :missing-predecessor
+    :missing-successor
+    :topological-sort-cycle
+    :vertex-involved))

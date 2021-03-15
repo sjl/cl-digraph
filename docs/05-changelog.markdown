@@ -5,6 +5,11 @@ Here's the list of changes in each released version.
 
 [TOC]
 
+v1.4.0
+------
+
+Added an explicit [condition hierarchy](../usage#conditions).
+
 v1.3.2
 ------
 

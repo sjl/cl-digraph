@@ -5,6 +5,7 @@
   :license "MIT"
 
   :depends-on (:cl-digraph
+               :alexandria
                :1am)
 
   :serial t
