@@ -431,7 +431,7 @@ the [cl-dot][] library by loading the optional `cl-digraph.dot` system:
 
     (digraph.dot:draw *d* :filename "digraph.png" :format :png)
 
-![Digraph PNG](http://i.imgur.com/TtyGQfM.png)
+[![Rendered Digraph](../static/rendered-digraph.png)](../static/rendered-digraph.png)
 
 [Graphviz]: http://www.graphviz.org/
 [cl-dot]: https://github.com/michaelw/cl-dot
