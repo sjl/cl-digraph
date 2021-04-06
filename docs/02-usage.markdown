@@ -409,7 +409,7 @@ retrieve one of the vertices involved in a cycle from the condition object.
     (digraph:insert-edge *d* 'c 'a) ; c depends on a
 
     (handler-case (digraph:topological-sort *d*)
-      (digraph:topological-sort-cycle-error (c)
+      (digraph:topological-sort-cycle (c)
         (list :cyclic (digraph:vertex-involved c))))
     ; =>
     ; (:CYCLIC A)
