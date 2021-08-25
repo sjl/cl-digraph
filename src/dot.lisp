@@ -19,11 +19,13 @@
 
 
 (defparameter *current-digraph* nil)
+(defparameter *vertex-shape* :circle
+  "The shape to use for vertex nodes.  Must be a valid cl-dot :shape node attribute.")
 
 
 (defmethod cl-dot:graph-object-node ((graph (eql 'digraph)) (vertex t))
   (make-instance 'cl-dot:node
-    :attributes `(:label ,(format nil "~A" vertex) :shape :circle)))
+    :attributes `(:label ,(format nil "~A" vertex) :shape ,*vertex-shape*)))
 
 (defmethod cl-dot:graph-object-points-to ((graph (eql 'digraph)) (vertex t))
   (successors *current-digraph* vertex))
