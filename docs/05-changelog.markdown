@@ -5,6 +5,11 @@ Here's the list of changes in each released version.
 
 [TOC]
 
+v1.5.0
+------
+
+Added `shape` argument to `digraph.dot:draw` to change the shape of the nodes.
+
 v1.4.0
 ------
 
