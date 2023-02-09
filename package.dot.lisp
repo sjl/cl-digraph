@@ -1,3 +1,3 @@
 (defpackage :digraph.dot
   (:use :cl :digraph :digraph.quickutils)
-  (:export :draw))
+  (:export :draw :*vertex-shape*))
