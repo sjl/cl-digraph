@@ -22,6 +22,38 @@ Return an arbitrary vertex of `digraph` and `t`.
 
   
 
+### `BUILD-FROM-LEAFS` (function)
+
+    (BUILD-FROM-LEAFS LEAFS PREDECESSOR-FUNCTION &KEY (TEST #'EQL) (HASH-FUNCTION NIL))
+
+Build a fresh `digraph` starting from `leafs` using `predecessor-function`.
+
+  This is a convenience function to build a digraph object if you have some
+  leafs and a function that can find their parents.
+
+  `leafs` must be a list.
+
+  `predecessor-function` must be a function that takes a vertex and returns
+  a list of its predecessors.
+
+  
+
+### `BUILD-FROM-ROOTS` (function)
+
+    (BUILD-FROM-ROOTS ROOTS SUCCESSOR-FUNCTION &KEY (TEST #'EQL) (HASH-FUNCTION NIL))
+
+Build a fresh `digraph` starting from `roots` using `successor-function`.
+
+  This is a convenience function to build a digraph object if you have some
+  roots and a function that can find their children.
+
+  `roots` must be a list.
+
+  `successor-function` must be a function that takes a vertex and returns a list
+  of its successors.
+
+  
+
 ### `CONTAINS-EDGE-P` (function)
 
     (CONTAINS-EDGE-P DIGRAPH PREDECESSOR SUCCESSOR)

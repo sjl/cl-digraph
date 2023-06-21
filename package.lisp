@@ -53,6 +53,9 @@
 
     :copy-digraph
 
+    :build-from-roots
+    :build-from-leafs
+
     :digraph-error
     :missing-vertex
     :missing-predecessor

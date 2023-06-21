@@ -307,3 +307,40 @@
     (insert-edge g 'd 'b)
     (has-topo-error g '(b c d))
     (remove-edge g 'd 'b)))
+
+
+(define-test convenience-builders
+  ;; a --> b --> c
+  ;;       |
+  ;;       v     e --> f
+  ;;       d
+  (let ((g (build-from-roots '(a e) (lambda (v) (ecase v
+                                                  (a '(b))
+                                                  (b '(c d))
+                                                  (c '())
+                                                  (d '())
+                                                  (e '(f))
+                                                  (f '()))))))
+    (is (same '(a b c d e f) (vertices g)))
+    (is (same '((a . b)
+                (b . c) (b . d)
+                (e . f))
+              (edges g))))
+  (let ((g (build-from-leafs '(c d f) (lambda (v) (ecase v
+                                                    (a '())
+                                                    (b '(a))
+                                                    (c '(b))
+                                                    (d '(b))
+                                                    (e '())
+                                                    (f '(e)))))))
+    (is (same '(a b c d e f) (vertices g)))
+    (is (same '((a . b)
+                (b . c) (b . d)
+                (e . f))
+              (edges g))))
+  (let ((g (build-from-roots '() (lambda (v) (ecase v)))))
+    (is (same '() (vertices g)))
+    (is (same '() (edges g))))
+  (let ((g (build-from-leafs '() (lambda (v) (ecase v)))))
+    (is (same '() (vertices g)))
+    (is (same '() (edges g)))))

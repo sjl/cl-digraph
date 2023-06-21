@@ -5,6 +5,16 @@ Here's the list of changes in each released version.
 
 [TOC]
 
+v1.6.0
+------
+
+Added `build-from-roots` and `build-from-leafs` convenience functions to help
+build digraphs when you have some roots/leafs and a way to generated their
+successors/predecessors.
+
+Added `label` argument to `digraph.dot:draw` to change the label function of the
+nodes.
+
 v1.5.0
 ------
 

@@ -281,6 +281,52 @@
   (null (succ digraph vertex)))
 
 
+;;;; Build --------------------------------------------------------------------
+(defun build-from-roots (roots successor-function &key (test #'eql) (hash-function nil))
+  "Build a fresh `digraph` starting from `roots` using `successor-function`.
+
+  This is a convenience function to build a digraph object if you have some
+  roots and a function that can find their children.
+
+  `roots` must be a list.
+
+  `successor-function` must be a function that takes a vertex and returns a list
+  of its successors.
+
+  "
+  (let ((result (make-digraph :test test :hash-function hash-function)))
+    (labels ((recur (node)
+               (insert-vertex result node)
+               (dolist (succ (funcall successor-function node))
+                 (insert-vertex result succ)
+                 (insert-edge result node succ)
+                 (recur succ))))
+      (map nil #'recur roots))
+    result))
+
+(defun build-from-leafs (leafs predecessor-function &key (test #'eql) (hash-function nil))
+  "Build a fresh `digraph` starting from `leafs` using `predecessor-function`.
+
+  This is a convenience function to build a digraph object if you have some
+  leafs and a function that can find their parents.
+
+  `leafs` must be a list.
+
+  `predecessor-function` must be a function that takes a vertex and returns
+  a list of its predecessors.
+
+  "
+  (let ((result (make-digraph :test test :hash-function hash-function)))
+    (labels ((recur (node)
+               (insert-vertex result node)
+               (dolist (pred (funcall predecessor-function node))
+                 (insert-vertex result pred)
+                 (insert-edge result pred node)
+                 (recur pred))))
+      (map nil #'recur leafs))
+    result))
+
+
 ;;;; Iteration ----------------------------------------------------------------
 (defun mapc-vertices (function digraph)
   "Call `function` on each vertex in `digraph`.
